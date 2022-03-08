@@ -1,0 +1,20 @@
+version: "3"
+services:
+  fluentbit:
+    image: fluent/fluent-bit:1.8
+    ports:
+      - "24224:24224"
+    command: /fluent-bit/bin/fluent-bit -i forward -o stdout -p format=json_lines -f 1
+    networks:
+      - eventnet
+  
+  fluencydemo:
+    build: .
+    image: fluencydemo
+    depends_on:
+      - fluentbit
+    networks:
+      - eventnet
+
+networks:
+  eventnet:
